@@ -39,8 +39,9 @@ void SN74HC595Component::digital_write_(uint8_t pin, bool value) {
 }
 
 bool SN74HC595Component::write_gpio_() {
+  this->
   for (int i = this->sr_count_ - 1; i >= 0; i--) {
-    uint8_t data = (uint8_t)(this->output_bits_ >> (8 * i) & 0xff);
+    uint8_t data = (uint8_t)(this->reverseBits(output_bits_) >> (8 * i) & 0xff);
     for (int j = 0; j < 8; j++) {
       this->data_pin_->digital_write(data & (1 << (7 - j)));
       this->clock_pin_->digital_write(true);
@@ -70,6 +71,21 @@ std::string SN74HC595GPIOPin::dump_summary() const {
   char buffer[32];
   snprintf(buffer, sizeof(buffer), "%u via SN74HC595", pin_);
   return buffer;
+}
+  
+unsigned int SN74HC595Component::reverseBits(unsigned int num)
+{
+    unsigned int  NO_OF_BITS = sizeof(num) * 8;
+    unsigned int reverse_num = 0, i, temp;
+  
+    for (i = 0; i < NO_OF_BITS; i++)
+    {
+        temp = (num & (1 << i));
+        if(temp)
+            reverse_num |= (1 << ((NO_OF_BITS - 1) - i));
+    }
+   
+    return reverse_num;
 }
 
 }  // namespace sn74hc595
