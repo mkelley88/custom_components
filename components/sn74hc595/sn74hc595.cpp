@@ -36,6 +36,7 @@ void SN74HC595Component::digital_write_(uint8_t pin, bool value) {
   if (value)
     this->output_bits_ |= mask;
   this->write_gpio_();
+  delay(30);
 }
 
 bool SN74HC595Component::write_gpio_() {
@@ -52,7 +53,6 @@ bool SN74HC595Component::write_gpio_() {
   // pulse latch to activate new values
   this->latch_pin_->digital_write(true);
   this->latch_pin_->digital_write(false);
-  delay(30);
 
   // enable output if configured
   if (this->have_oe_pin_) {
